@@ -1,6 +1,5 @@
 {
   "homepage": "https://good12834.github.io/netflix-clone2025",
-  
   "name": "netflix-clone",
   "version": "0.1.0",
   "private": true,
@@ -10,7 +9,6 @@
     "start": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
@@ -37,6 +35,7 @@
     "eslint-plugin-react": "^7.32.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "gh-pages": "^6.3.0",
     "github-pages": "^3.0.2",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^10.3.1",
