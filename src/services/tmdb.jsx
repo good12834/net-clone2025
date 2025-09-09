@@ -63,7 +63,8 @@ const axiosInstance = axios.create({
     Authorization: `Bearer ${bearerToken}`,
     'Content-Type': 'application/json',
   } : {},
-  params: apiKey ? { api_key: apiKey } : {},
+  // Only use API key as fallback for read operations, not in headers
+  params: !bearerToken && apiKey ? { api_key: apiKey } : {},
 });
 
 axiosRetry(axiosInstance, {
@@ -311,12 +312,31 @@ const TMDBService = {
     }
     try {
       console.log(`Fetching favorite movies for account ${accountId}...`);
-      const response = await axiosInstance.get(`/account/${accountId}/favorite/movies`, {
+
+      if (!apiKey) {
+        throw new Error('TMDB API key is required for favorite movies.');
+      }
+
+      // For user-specific endpoints, TMDB requires API key as query parameter
+      const authInstance = axios.create({
+        baseURL: TMDB_API_URL,
+        params: { api_key: apiKey },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const response = await authInstance.get(`/account/${accountId}/favorite/movies`, {
         params: { session_id: sessionId },
       });
       return await this.transformMovies(response.data.results);
     } catch (error) {
       console.error(`❌ TMDB API error for favorite movies: ${error.response?.status} ${error.message}`);
+      if (error.response?.status === 401) {
+        throw new Error('Invalid session. Please try authenticating again.');
+      } else if (error.response?.status === 404) {
+        throw new Error('Favorite movies endpoint not found. Please check your API key permissions.');
+      }
       throw new Error(`Failed to fetch favorite movies: ${error.message}`);
     }
   },
@@ -357,15 +377,25 @@ const TMDBService = {
   async createRequestToken() {
     try {
       console.log('🔑 Creating TMDB request token...');
-      console.log('Using Bearer Token:', !!bearerToken);
-      console.log('Using API Key:', !!apiKey);
 
-      // Test a simple API call first
+      if (!apiKey) {
+        throw new Error('TMDB API key is required for authentication. Please check VITE_TMDB_API_KEY in .env.local.');
+      }
+
+      // For authentication endpoints, TMDB requires API key as query parameter
+      const authInstance = axios.create({
+        baseURL: TMDB_API_URL,
+        params: { api_key: apiKey },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
       console.log('Testing TMDB API connectivity...');
-      const testResponse = await axiosInstance.get('/movie/popular', { params: { page: 1 } });
+      const testResponse = await authInstance.get('/movie/popular', { params: { page: 1 } });
       console.log('✅ TMDB API test successful');
 
-      const response = await axiosInstance.post('/authentication/token/new');
+      const response = await authInstance.post('/authentication/token/new');
       console.log('✅ TMDB request token created:', response.data.request_token);
       return response.data.request_token;
     } catch (error) {
@@ -378,6 +408,8 @@ const TMDBService = {
         throw new Error('Invalid TMDB API key. Please check VITE_TMDB_API_KEY in .env.local.');
       } else if (error.response?.status === 429) {
         throw new Error('TMDB API rate limit exceeded. Please try again later.');
+      } else if (error.response?.status === 404) {
+        throw new Error('TMDB API endpoint not found. Please check your API key permissions.');
       }
       throw new Error(`Failed to create request token: ${error.message}`);
     }
@@ -386,7 +418,21 @@ const TMDBService = {
   async createSession(requestToken) {
     try {
       console.log('Creating TMDB session with token:', requestToken);
-      const response = await axiosInstance.post('/authentication/session/new', {
+
+      if (!apiKey) {
+        throw new Error('TMDB API key is required for session creation.');
+      }
+
+      // For session creation, TMDB requires API key as query parameter
+      const authInstance = axios.create({
+        baseURL: TMDB_API_URL,
+        params: { api_key: apiKey },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const response = await authInstance.post('/authentication/session/new', {
         request_token: requestToken,
       });
       console.log('TMDB session ID:', response.data.session_id);
@@ -395,6 +441,8 @@ const TMDBService = {
       console.error(`❌ TMDB API error for session creation: ${error.response?.status} ${error.message}`);
       if (error.response?.status === 401) {
         throw new Error('Invalid request token. Please try authenticating again.');
+      } else if (error.response?.status === 404) {
+        throw new Error('Session creation endpoint not found. Please check your API key permissions.');
       }
       throw new Error(`Failed to create session: ${error.message}`);
     }
@@ -403,13 +451,32 @@ const TMDBService = {
   async getAccountDetails(sessionId) {
     try {
       console.log('Fetching TMDB account details...');
-      const response = await axiosInstance.get('/account', {
+
+      if (!apiKey) {
+        throw new Error('TMDB API key is required for account details.');
+      }
+
+      // For account details, TMDB requires API key as query parameter
+      const authInstance = axios.create({
+        baseURL: TMDB_API_URL,
+        params: { api_key: apiKey },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const response = await authInstance.get('/account', {
         params: { session_id: sessionId },
       });
       console.log('TMDB account details:', response.data);
       return response.data;
     } catch (error) {
       console.error(`❌ TMDB API error for account details: ${error.response?.status} ${error.message}`);
+      if (error.response?.status === 401) {
+        throw new Error('Invalid session. Please try authenticating again.');
+      } else if (error.response?.status === 404) {
+        throw new Error('Account details endpoint not found. Please check your API key permissions.');
+      }
       throw new Error(`Failed to fetch account details: ${error.message}`);
     }
   },
@@ -426,11 +493,15 @@ const TMDBService = {
         (video) => video.site === 'YouTube'
       );
       if (!trailer) {
-        console.warn(`No YouTube trailer found for movie ID: ${movieId}`);
+        console.log(`No YouTube trailer found for movie ID: ${movieId}`);
         return null;
       }
       return `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=0`;
     } catch (error) {
+      if (error.response?.status === 404) {
+        console.log(`No videos available for movie ID: ${movieId}`);
+        return null;
+      }
       console.error(`❌ TMDB API error for movie videos (ID: ${movieId}): ${error.response?.status} ${error.message}`);
       return null;
     }
@@ -448,11 +519,15 @@ const TMDBService = {
         (video) => video.site === 'YouTube'
       );
       if (!trailer) {
-        console.warn(`No YouTube trailer found for TV show ID: ${showId}`);
+        console.log(`No YouTube trailer found for TV show ID: ${showId}`);
         return null;
       }
       return `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=0`;
     } catch (error) {
+      if (error.response?.status === 404) {
+        console.log(`No videos available for TV show ID: ${showId}`);
+        return null;
+      }
       console.error(`❌ TMDB API error for TV show videos (ID: ${showId}): ${error.response?.status} ${error.message}`);
       return null;
     }
