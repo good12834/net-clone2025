@@ -15,7 +15,7 @@ const LazyAuthCallback = React.lazy(() => import('./pages/auth-callback'))
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <Router>
+      <Router basename="/net-clone2025">
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>
             <Route path="/" element={<App />} />
