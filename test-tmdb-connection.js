@@ -1,40 +1,67 @@
-// Test TMDB API connection
-import TMDBService from './src/services/tmdb.jsx';
+// Test TMDB API Connection
+// Run with: node test-tmdb-connection.js
 
-async function testTMDBConnection() {
-  console.log('🧪 Testing TMDB API connection...');
+const axios = require('axios');
+require('dotenv').config({ path: '.env.local' });
+
+const TMDB_API_URL = 'https://api.themoviedb.org/3';
+const apiKey = process.env.VITE_TMDB_API_KEY;
+const bearerToken = process.env.VITE_TMDB_BEARER_TOKEN;
+
+console.log('🔍 Testing TMDB API Connection...\n');
+
+async function testAPIConnection() {
+  if (!apiKey || apiKey === 'YOUR_API_KEY_HERE') {
+    console.log('❌ API Key not configured. Please update VITE_TMDB_API_KEY in .env.local');
+    return;
+  }
+
+  if (!bearerToken || bearerToken === 'YOUR_BEARER_TOKEN_HERE') {
+    console.log('❌ Bearer Token not configured. Please update VITE_TMDB_BEARER_TOKEN in .env.local');
+    return;
+  }
+
+  console.log('✅ API Key found:', apiKey.substring(0, 10) + '...');
+  console.log('✅ Bearer Token found:', bearerToken.substring(0, 20) + '...\n');
 
   try {
-    console.log('📡 Testing trending movies fetch...');
-    const trendingMovies = await TMDBService.getTrending('all', 'week');
-    console.log(`✅ Successfully fetched ${trendingMovies.length} trending movies`);
+    // Test with API key
+    console.log('🧪 Testing API Key authentication...');
+    const response = await axios.get(`${TMDB_API_URL}/movie/popular`, {
+      params: { api_key: apiKey, page: 1 }
+    });
 
-    if (trendingMovies.length > 0) {
-      const firstMovie = trendingMovies[0];
-      console.log('🎬 First movie:', {
-        title: firstMovie.title,
-        id: firstMovie.id,
-        hasImage: !!firstMovie.image,
-        hasTrailer: !!firstMovie.trailer,
-        category: firstMovie.category
-      });
-    }
+    console.log('✅ API Key test successful!');
+    console.log('📊 Found', response.data.results.length, 'popular movies\n');
 
-    console.log('🎉 TMDB API is working correctly!');
-    return true;
+    // Test with Bearer token
+    console.log('🧪 Testing Bearer Token authentication...');
+    const bearerResponse = await axios.get(`${TMDB_API_URL}/movie/popular`, {
+      headers: {
+        'Authorization': `Bearer ${bearerToken}`,
+        'Content-Type': 'application/json'
+      },
+      params: { page: 1 }
+    });
+
+    console.log('✅ Bearer Token test successful!');
+    console.log('📊 Found', bearerResponse.data.results.length, 'popular movies\n');
+
+    console.log('🎉 All TMDB API tests passed! Your configuration is working correctly.');
+
   } catch (error) {
-    console.error('❌ TMDB API test failed:', error.message);
-    console.error('Error details:', error.response?.data || error);
-    return false;
+    console.log('❌ TMDB API test failed:');
+    console.log('Status:', error.response?.status);
+    console.log('Message:', error.response?.data?.status_message || error.message);
+
+    if (error.response?.status === 401) {
+      console.log('\n💡 This usually means:');
+      console.log('   - Your API key is invalid or expired');
+      console.log('   - Your Bearer token is invalid');
+      console.log('   - Your API key doesn\'t have the right permissions');
+      console.log('\n🔗 Get new keys at: https://www.themoviedb.org/settings/api');
+    }
   }
 }
 
-// Run the test
-testTMDBConnection().then(success => {
-  if (success) {
-    console.log('✅ All tests passed!');
-  } else {
-    console.log('❌ Tests failed!');
-  }
-  process.exit(success ? 0 : 1);
-});
+testAPIConnection();
