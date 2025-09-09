@@ -1,11 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import TMDBService from './services/tmdb';
 import Header from './components/Header/Header';
-import Hero from './components/Hero/Hero';
-import AuthModal from './components/AuthModal/AuthModal';
-import AdminPanel from './components/AdminPanel/AdminPanel';
 import Footer from './components/Footer/Footer';
 import FilterBar from './components/FilterBar/FilterBar';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -15,6 +12,11 @@ import 'swiper/css/navigation';
 import './App.css';
 import { db } from './firebase';
 import { collection, addDoc, getDocs, deleteDoc, query, where } from 'firebase/firestore';
+
+// Lazy load components
+const Hero = lazy(() => import('./components/Hero/Hero'));
+const AuthModal = lazy(() => import('./components/AuthModal/AuthModal'));
+const AdminPanel = lazy(() => import('./components/AdminPanel/AdminPanel'));
 
 const App = () => {
   const [movies, setMovies] = useState({ movies: [], tv_shows: [] });
@@ -455,7 +457,9 @@ const App = () => {
       {error && <div className="error-message">{error}</div>}
       {loading && <div className="loading-spinner">Loading...</div>}
       {heroMovie ? (
-        <Hero movie={heroMovie} onPlayTrailer={handlePlayTrailer} />
+        <Suspense fallback={<div className="loading-spinner">Loading...</div>}>
+          <Hero movie={heroMovie} onPlayTrailer={handlePlayTrailer} />
+        </Suspense>
       ) : (
         <div className="hero-placeholder">No trending content available</div>
       )}
@@ -570,8 +574,14 @@ const App = () => {
           </>
         )}
       </div>
-      {isAdmin && <AdminPanel />}
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} onAuthSuccess={handleAuthSuccess} />
+      {isAdmin && (
+        <Suspense fallback={<div className="loading-spinner">Loading...</div>}>
+          <AdminPanel />
+        </Suspense>
+      )}
+      <Suspense fallback={<div className="loading-spinner">Loading...</div>}>
+        <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} onAuthSuccess={handleAuthSuccess} />
+      </Suspense>
       {selectedMovie && selectedMovie.trailer && (
         <div className="trailer-modal">
           <div className="trailer-modal-content">
