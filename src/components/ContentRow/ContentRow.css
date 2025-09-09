@@ -1,0 +1,137 @@
+/* Professional Netflix-style Content Row */
+.content-row {
+  padding: 20px 40px;
+  background: #141414;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.content-row h2 {
+  margin: 0 0 15px 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.content-row-movies {
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  padding: 10px 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.content-row-movies::-webkit-scrollbar {
+  display: none;
+}
+
+.movie-card {
+  flex: 0 0 auto;
+  width: 220px;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.movie-poster-container {
+  position: relative;
+  width: 100%;
+  height: 330px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.movie-card:hover .movie-poster-container {
+  transform: scale(1.08);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+.movie-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+.clickable-movie {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.clickable-movie:hover {
+  transform: scale(1.02);
+}
+
+/* Movie Info Overlay */
+.movie-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  padding: 60px 15px 15px 15px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.movie-poster-container:hover .movie-info {
+  opacity: 1;
+}
+
+.movie-info h3 {
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.movie-info p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #46d369;
+  font-weight: 500;
+}
+
+/* Mobile-first responsive design */
+@media (min-width: 768px) {
+  .content-row {
+    padding: 20px 40px;
+  }
+
+  .content-row h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+
+  .movie-card {
+    width: 220px;
+  }
+
+  .movie-poster-container {
+    height: 330px;
+  }
+
+  .content-row-movies {
+    gap: 8px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .movie-card {
+    width: 240px;
+  }
+
+  .movie-poster-container {
+    height: 360px;
+  }
+}

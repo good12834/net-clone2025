@@ -1,0 +1,279 @@
+/* .video-player-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 15000;
+  cursor: pointer;
+}
+
+.video-player {
+  position: relative;
+  width: 90vw;
+  max-width: 1200px;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: default;
+}
+
+.video-player.fullscreen {
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+}
+
+.video-element {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.video-player:hover .video-overlay {
+  opacity: 1;
+}
+
+.play-button {
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid white;
+  color: white;
+  font-size: 3rem;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.play-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.video-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.video-player:hover .video-controls,
+.video-controls.visible {
+  opacity: 1;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.progress-filled {
+  height: 100%;
+  background: #e50914;
+  border-radius: 3px;
+  transition: width 0.1s ease;
+}
+
+.controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.left-controls,
+.right-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.control-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.close-btn {
+  color: #e50914;
+  font-size: 1.5rem;
+}
+
+.volume-slider {
+  width: 80px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.time-display {
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.video-info {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.video-player:hover .video-info {
+  opacity: 1;
+}
+
+.video-info h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.video-info p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.video-error {
+  padding: 3rem;
+  text-align: center;
+  color: white;
+}
+
+.video-error h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+}
+
+.video-error p {
+  margin: 0 0 2rem 0;
+  color: #ccc;
+}
+
+.video-error .close-btn {
+  background: #e50914;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.video-error .close-btn:hover {
+  background: #f40612;
+}
+
+.video-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  z-index: 10;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #e50914;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.video-loading p {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #ccc;
+} */
+
+/* Mobile responsiveness */
+/* @media (max-width: 768px) {
+  .video-player {
+    width: 95vw;
+  }
+
+  .play-button {
+    font-size: 2rem;
+    width: 60px;
+    height: 60px;
+  }
+
+  .control-btn {
+    font-size: 1rem;
+    padding: 0.4rem;
+  }
+
+  .volume-slider {
+    width: 60px;
+  }
+
+  .time-display {
+    font-size: 0.8rem;
+  }
+
+  .video-info h3 {
+    font-size: 1.2rem;
+  }
+} */

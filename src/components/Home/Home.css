@@ -1,0 +1,53 @@
+.home-container {
+  padding: 80px 20px 20px;
+  background-color: #141414;
+  min-height: 100vh;
+}
+
+.card {
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card-img-top {
+  object-fit: cover;
+  height: 300px;
+}
+
+.btn-netflix-red {
+  background-color: #e50914;
+  color: #ffffff;
+  border: none;
+}
+
+.btn-netflix-red:hover {
+  background-color: #b20710;
+  color: #ffffff;
+}
+
+.featured-trailer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ratio-16x9 iframe {
+  border: 2px solid #e50914;
+  border-radius: 8px;
+}
+
+@media (max-width: 767.98px) {
+  .home-container {
+    padding: 70px 15px 15px;
+  }
+
+  .card-img-top {
+    height: 200px;
+  }
+
+  .featured-trailer {
+    max-width: 100%;
+  }
+}

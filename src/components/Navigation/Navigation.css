@@ -1,0 +1,34 @@
+/* src/components/Navigation.css */
+.navigation {
+  background: #141414;
+  padding: 10px 20px;
+}
+
+.navigation ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.navigation li {
+  margin-right: 20px;
+}
+
+.navigation li button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.navigation li.active button {
+  color: #e50914;
+}
+
+.navigation li button:hover {
+  color: #e50914;
+}

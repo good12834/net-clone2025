@@ -1,0 +1,45 @@
+{
+  "homepage": "https://good12834.github.io/netflix-clone2025",
+  
+  "name": "netflix-clone",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
+    
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.0.1",
+    "axios": "^1.11.0",
+    "axios-retry": "^4.5.0",
+    "bootstrap": "^5.3.8",
+    "firebase": "^12.2.1",
+    "lodash": "^4.17.21",
+    "lodash.debounce": "^4.0.8",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.8.0",
+    "react-youtube": "^10.1.0",
+    "swiper": "^11.2.10"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^8",
+    "eslint-plugin-react": "^7.32.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "github-pages": "^3.0.2",
+    "postcss-flexbugs-fixes": "^5.0.2",
+    "postcss-preset-env": "^10.3.1",
+    "vite": "^4.3.0"
+  }
+}
