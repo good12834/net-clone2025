@@ -59,12 +59,11 @@ const demoMovies = [
 
 const axiosInstance = axios.create({
   baseURL: TMDB_API_URL,
-  headers: bearerToken ? {
-    Authorization: `Bearer ${bearerToken}`,
+  headers: {
     'Content-Type': 'application/json',
-  } : {},
-  // Only use API key as fallback for read operations, not in headers
-  params: !bearerToken && apiKey ? { api_key: apiKey } : {},
+  },
+  // Use API key as query parameter for all requests (TMDB prefers this for most operations)
+  params: apiKey ? { api_key: apiKey } : {},
 });
 
 axiosRetry(axiosInstance, {
@@ -317,13 +316,16 @@ const TMDBService = {
         throw new Error('TMDB API key is required for favorite movies.');
       }
 
-      // For user-specific endpoints, TMDB requires API key as query parameter
+      // For user-specific endpoints, use Bearer token if available, otherwise API key
       const authInstance = axios.create({
         baseURL: TMDB_API_URL,
-        params: { api_key: apiKey },
-        headers: {
+        headers: bearerToken ? {
+          Authorization: `Bearer ${bearerToken}`,
+          'Content-Type': 'application/json',
+        } : {
           'Content-Type': 'application/json',
         },
+        params: { api_key: apiKey },
       });
 
       const response = await authInstance.get(`/account/${accountId}/favorite/movies`, {

@@ -2,11 +2,32 @@
 // Run with: node test-tmdb-connection.js
 
 const axios = require('axios');
-require('dotenv').config({ path: '.env.local' });
+const fs = require('fs');
+const path = require('path');
+
+// Load environment variables from .env.local
+const envPath = path.join(__dirname, '.env.local');
+let apiKey, bearerToken;
+
+try {
+  const envContent = fs.readFileSync(envPath, 'utf8');
+  const lines = envContent.split('\n');
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed.startsWith('VITE_TMDB_API_KEY=')) {
+      apiKey = trimmed.split('=')[1];
+    } else if (trimmed.startsWith('VITE_TMDB_BEARER_TOKEN=')) {
+      bearerToken = trimmed.split('=')[1];
+    }
+  }
+} catch (error) {
+  console.log('❌ Could not read .env.local file');
+  console.log('Please make sure the file exists and contains your TMDB API keys');
+  process.exit(1);
+}
 
 const TMDB_API_URL = 'https://api.themoviedb.org/3';
-const apiKey = process.env.VITE_TMDB_API_KEY;
-const bearerToken = process.env.VITE_TMDB_BEARER_TOKEN;
 
 console.log('🔍 Testing TMDB API Connection...\n');
 
