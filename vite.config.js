@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  base: '/netflix-clone2025/', // 👈 Add this line
+  base: '/net-clone2025/', // 👈 Add this line
   plugins: [react()],
   server: {
     port: 5178,

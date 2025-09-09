@@ -13,7 +13,12 @@ const AuthModal = ({ isOpen, onClose, onAuthSuccess }) => {
     setError(null);
     try {
       const requestToken = await TMDBService.createRequestToken();
-      const redirectUrl = `https://www.themoviedb.org/authenticate/${requestToken}?redirect_to=http://localhost:5179/auth-callback`;
+      // Use production URL for GitHub Pages deployment
+      const isProduction = window.location.hostname !== 'localhost';
+      const baseUrl = isProduction
+        ? 'https://good12834.github.io/net-clone2025'
+        : 'http://localhost:5179';
+      const redirectUrl = `https://www.themoviedb.org/authenticate/${requestToken}?redirect_to=${baseUrl}/auth-callback`;
       window.location.href = redirectUrl;
     } catch (err) {
       console.error('AuthModal error:', err.message);
