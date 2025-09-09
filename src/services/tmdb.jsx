@@ -378,8 +378,8 @@ const TMDBService = {
     try {
       console.log('🔑 Creating TMDB request token...');
 
-      if (!apiKey) {
-        throw new Error('TMDB API key is required for authentication. Please check VITE_TMDB_API_KEY in .env.local.');
+      if (!apiKey || apiKey === 'YOUR_API_KEY_HERE') {
+        throw new Error('TMDB API key is not configured. Please get your FREE API key from https://www.themoviedb.org/settings/api and update VITE_TMDB_API_KEY in .env.local.');
       }
 
       // For authentication endpoints, TMDB requires API key as query parameter
@@ -405,11 +405,11 @@ const TMDBService = {
       console.error('Error data:', error.response?.data);
 
       if (error.response?.status === 401) {
-        throw new Error('Invalid TMDB API key. Please check VITE_TMDB_API_KEY in .env.local.');
+        throw new Error('Invalid TMDB API key. Please check VITE_TMDB_API_KEY in .env.local or get a new key from https://www.themoviedb.org/settings/api.');
       } else if (error.response?.status === 429) {
         throw new Error('TMDB API rate limit exceeded. Please try again later.');
       } else if (error.response?.status === 404) {
-        throw new Error('TMDB API endpoint not found. Please check your API key permissions.');
+        throw new Error('TMDB API endpoint not found. Your API key may not have authentication permissions. Please check your API key settings at https://www.themoviedb.org/settings/api.');
       }
       throw new Error(`Failed to create request token: ${error.message}`);
     }
